@@ -37,14 +37,22 @@ func main() {
 		fmt.Println("Enter no of tickets")
 		fmt.Scan(&userTickets)
 
+		if userTickets > remainingTickets {
+			fmt.Printf("We have only %v tickets left", remainingTickets)
+
+			//break
+			continue
+		}
+
 		remainingTickets = remainingTickets - userTickets
+
 		//Arrays and slices
 
 		//var bookings [50]string
 
-		bookings = append(bookings, firstName+" "+lastName)
+		//bookings = append(bookings, firstName+" "+lastName)
 
-		fmt.Printf("\n %v booked %v tickets", firstName, userTickets)
+		fmt.Printf("\n %v booked %v tickets/n", firstName, userTickets)
 		fmt.Println("	you will get a confirmation at this email address")
 
 		firstNames := []string{}
@@ -54,10 +62,14 @@ func main() {
 			firstNames = append(firstNames, names[0])
 
 		}
-		fmt.Printf("These are all your bookings %v\n", bookings)
+		fmt.Printf("These are all your bookings %v\n", userTickets)
 
 		fmt.Println("Remaining tickets left	", remainingTickets)
 
+		if remainingTickets == 0 {
+			fmt.Println("We are completely booked,Try next year")
+			break
+		}
 	}
 
 }
