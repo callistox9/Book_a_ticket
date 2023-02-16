@@ -34,41 +34,55 @@ func main() {
 		fmt.Println("enter your email")
 		fmt.Scan(&email)
 		//use of pointer.Memory address//Special varialbe//println(variable) to print memory address
+
 		fmt.Println("Enter no of tickets")
 		fmt.Scan(&userTickets)
+		// checking user validation
+		isValidName := len(firstName) >= 2 && len(lastName) >= 2
+		isValidEmial := strings.Contains(email, "@")
+		isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
 
-		if userTickets > remainingTickets {
-			fmt.Printf("We have only %v tickets left", remainingTickets)
+		if isValidEmial && isValidName && isValidTicketNumber {
 
-			//break
-			continue
-		}
+			remainingTickets = remainingTickets - userTickets
 
-		remainingTickets = remainingTickets - userTickets
+			//Arrays and slices
 
-		//Arrays and slices
+			//var bookings [50]string
 
-		//var bookings [50]string
+			bookings = append(bookings, firstName+" "+lastName)
 
-		//bookings = append(bookings, firstName+" "+lastName)
+			fmt.Printf("\n %v booked %v tickets/n", firstName, userTickets)
+			fmt.Println("	you will get a confirmation at this email address")
 
-		fmt.Printf("\n %v booked %v tickets/n", firstName, userTickets)
-		fmt.Println("	you will get a confirmation at this email address")
+			firstNames := []string{}
+			for _, booking := range bookings { //blank identifier '_'.To ignore variables you dont want to use
+				var names = strings.Fields(booking) // names is an array which stores the split string
+				//var firstName = names[0];//the first index of the names which is first name is stored in it
+				firstNames = append(firstNames, names[0])
 
-		firstNames := []string{}
-		for _, booking := range bookings { //blank identifier '_'.To ignore variables you dont want to use
-			var names = strings.Fields(booking) // names is an array which stores the split string
-			//var firstName = names[0];//the first index of the names which is first name is stored in it
-			firstNames = append(firstNames, names[0])
+			}
+			fmt.Printf("These are all your bookings %v\n", userTickets)
 
-		}
-		fmt.Printf("These are all your bookings %v\n", userTickets)
+			fmt.Println("Remaining tickets left	", remainingTickets)
 
-		fmt.Println("Remaining tickets left	", remainingTickets)
+			if remainingTickets == 0 {
+				fmt.Println("We are completely booked,Try next year")
+				break
+			}
 
-		if remainingTickets == 0 {
-			fmt.Println("We are completely booked,Try next year")
-			break
+		} else {
+			if !isValidEmial {
+				fmt.Println("Please enter valid email")
+			}
+			if !isValidName {
+				fmt.Println("Enter valid Name")
+
+			}
+			if !isValidTicketNumber {
+				fmt.Println("Please enter valid ticket number")
+			}
+
 		}
 	}
 
