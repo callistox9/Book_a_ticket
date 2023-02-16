@@ -32,8 +32,15 @@ func main() {
 	fmt.Scan(&userTickets)
 
 	remainingTickets = remainingTickets - userTickets
+	//Arrays and slices
+
+	//var bookings [50]string
+	var bookings []string // syntax var bookings =[]string{}; or bookings:=[]string{};
+	bookings = append(bookings, firstName+" "+lastName)
 
 	fmt.Printf(" %v booked %v tickets", firstName, userTickets)
 	fmt.Println("	you will get a confirmation at this email address")
+	fmt.Printf("These are all your bookings %v\n", bookings)
+
 	fmt.Println("Remaining tickets left	", remainingTickets)
 }
