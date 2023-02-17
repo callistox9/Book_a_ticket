@@ -52,7 +52,7 @@ func main() {
 
 			bookings = append(bookings, firstName+" "+lastName)
 
-			fmt.Printf("\n %v booked %v tickets/n", firstName, userTickets)
+			fmt.Printf("\n %v booked %v tickets \n", firstName, userTickets)
 			fmt.Println("	you will get a confirmation at this email address")
 
 			firstNames := []string{}
@@ -80,7 +80,7 @@ func main() {
 
 			}
 			if !isValidTicketNumber {
-				fmt.Println("Please enter valid ticket number")
+				fmt.Printf("We only have %v tickets with us, Please enter valid ticket number", remainingTickets)
 			}
 
 		}
