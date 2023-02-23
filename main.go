@@ -3,11 +3,11 @@ package main
 import (
 	"booking-app/helper"
 	"fmt"
-	"strings"
+	"strconv"
 )
 
 // package level variables
-var bookings []string // syntax var bookings =[]string{}; or bookings:=[]string{}; //its a slice
+// Slice -- syntax var bookings =[]string{}; or bookings:=[]string{}; //its a slice
 
 var conferenceName string = "Go Conference"
 
@@ -15,6 +15,7 @@ const conferenceTickets int = 50
 
 // go through Data tyoes in go.<<-uint etc..-->>
 var remainingTickets uint = 50
+var bookings = make([]map[string]string, 0) //creating empty list of maps
 
 func main() {
 
@@ -37,7 +38,7 @@ func main() {
 
 			if isValidEmial && isValidName && isValidTicketNumber {
 
-				bookTicket(userTickets, firstName, lastName)
+				bookTicket(userTickets, firstName, lastName, email)
 
 				var k = firstnames()                                   // stroing the return value of function firstname into k
 				fmt.Printf("The first names of bookings are %v \n", k) //printing the return value of the function that is firstname
@@ -78,9 +79,9 @@ func greetUser() {
 func firstnames() []string {
 	firstNames := []string{}
 	for _, booking := range bookings { //blank identifier '_'.To ignore variables you dont want to use
-		var names = strings.Fields(booking) // names is an array which stores the split string after space
+		//var names = strings.Fields(booking) // names is an array which stores the split string after space
 		//var firstName = names[0];//the first index of the names which is first name is stored in it
-		firstNames = append(firstNames, names[0])
+		firstNames = append(firstNames, booking["firstName"])
 
 	}
 	return firstNames
@@ -110,14 +111,27 @@ func userInput() (string, string, string, uint) {
 	fmt.Scan(&userTickets)
 	return firstName, lastName, email, userTickets
 }
-func bookTicket(userTickets uint, firstName string, lastName string) {
+func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 
 	remainingTickets = remainingTickets - userTickets
 
 	//Arrays and slices
+	//use of mapsss
 
 	//var bookings [50]string
+	//useOfMAps
+	var userData = make(map[string]string) //bookings map
 
-	bookings = append(bookings, firstName+" "+lastName)
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	//FormatUint(i uint64, base int) string
+	//FormatUint returns the string representation of i in the given base,
+	//for 2 <= base <= 36. The result uses the lower-case letters 'a' to 'z'
+	//for digit values >= 10.
+	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) //converting uint to string
+
+	bookings = append(bookings, userData)
+	fmt.Printf("List of Bookings is  %v \n", bookings)
 
 }
