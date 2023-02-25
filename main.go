@@ -3,7 +3,7 @@ package main
 import (
 	"booking-app/helper"
 	"fmt"
-	"strconv"
+	"time"
 )
 
 // package level variables
@@ -15,7 +15,18 @@ const conferenceTickets int = 50
 
 // go through Data tyoes in go.<<-uint etc..-->>
 var remainingTickets uint = 50
-var bookings = make([]map[string]string, 0) //creating empty list of maps
+var bookings = make([]UserData, 0) //empty list of user data struct
+
+// var bookings = make([]map[string]string, 0) //creating empty list of maps
+// Learning about struct
+// type keyword creates a new type, with the neame you specify
+type UserData struct {
+	firstName string
+	lastName  string //mixed datatype >> defining a structure (which fields) of the User Type
+	//it iws somewhat like a light weight class, which e.g doesn't support inheritance
+	email           string
+	numberOfTickets uint
+}
 
 func main() {
 
@@ -39,6 +50,9 @@ func main() {
 			if isValidEmial && isValidName && isValidTicketNumber {
 
 				bookTicket(userTickets, firstName, lastName, email)
+				go sendTicket(userTickets, firstName, lastName, email)
+
+				//concurrency in go
 
 				var k = firstnames()                                   // stroing the return value of function firstname into k
 				fmt.Printf("The first names of bookings are %v \n", k) //printing the return value of the function that is firstname
@@ -81,7 +95,7 @@ func firstnames() []string {
 	for _, booking := range bookings { //blank identifier '_'.To ignore variables you dont want to use
 		//var names = strings.Fields(booking) // names is an array which stores the split string after space
 		//var firstName = names[0];//the first index of the names which is first name is stored in it
-		firstNames = append(firstNames, booking["firstName"])
+		firstNames = append(firstNames, booking.firstName)
 
 	}
 	return firstNames
@@ -120,18 +134,35 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 
 	//var bookings [50]string
 	//useOfMAps
-	var userData = make(map[string]string) //bookings map
+	//var userData = make(map[string]string) //bookings map
 
-	userData["firstName"] = firstName
-	userData["lastName"] = lastName
-	userData["email"] = email
+	var userData = UserData{
+		firstName:       firstName,
+		lastName:        lastName,
+		email:           email,
+		numberOfTickets: userTickets,
+	}
+
+	//userData["firstName"] = firstName
+	//userData["lastName"] = lastName
+	//userData["email"] = email
 	//FormatUint(i uint64, base int) string
 	//FormatUint returns the string representation of i in the given base,
 	//for 2 <= base <= 36. The result uses the lower-case letters 'a' to 'z'
 	//for digit values >= 10.
-	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) //converting uint to string
+	//userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10) //converting uint to string
 
 	bookings = append(bookings, userData)
 	fmt.Printf("List of Bookings is  %v \n", bookings)
+
+}
+
+// GOroutines
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	time.Sleep(30 * time.Second) // the Sleep function stops or blocks the current "thread" (goRoutine) execution for the defined duration
+	var ticket = fmt.Sprintf("%v tickets for %v %v \n", userTickets, firstName, lastName)
+	fmt.Println("#########")
+	fmt.Printf("Sending %v to email address %v \n", ticket, email)
+	fmt.Println("#########")
 
 }
