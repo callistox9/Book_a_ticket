@@ -3,6 +3,7 @@ package main
 import (
 	"booking-app/helper"
 	"fmt"
+	"sync"
 	"time"
 )
 
@@ -28,62 +29,69 @@ type UserData struct {
 	numberOfTickets uint
 }
 
+var wg = sync.WaitGroup{}
+
 func main() {
 
 	greetUser()
 
 	// Infinite loop
-	for {
+	//for {
 
-		println("Do you wantr to book a ticket?y/n")
-		var ch string
-		fmt.Scan(&ch)
-		if ch == "y" {
-			if remainingTickets == 0 {
-				fmt.Println("We are completely booked,Try next year")
-				break
-			}
-			var firstName, lastName, email, userTickets = userInput()
-			// checking user validation
-			isValidName, isValidEmial, isValidTicketNumber := helper.Validation(firstName, lastName, email, userTickets, remainingTickets)
-
-			if isValidEmial && isValidName && isValidTicketNumber {
-
-				bookTicket(userTickets, firstName, lastName, email)
-				go sendTicket(userTickets, firstName, lastName, email)
-
-				//concurrency in go
-
-				var k = firstnames()                                   // stroing the return value of function firstname into k
-				fmt.Printf("The first names of bookings are %v \n", k) //printing the return value of the function that is firstname
-
-				fmt.Printf("\n %v booked %v tickets \n", firstName, userTickets)
-				fmt.Println("	you will get a confirmation at this email address", email)
-
-				fmt.Printf("These are all your bookings %v\n", userTickets)
-
-				fmt.Println("Remaining tickets left	", remainingTickets)
-				println("Thank you")
-
-			} else {
-				if !isValidEmial {
-					fmt.Println("Please enter valid email")
-				}
-				if !isValidName {
-					fmt.Println("Enter valid Name")
-
-				}
-				if !isValidTicketNumber {
-					fmt.Printf("We only have %v tickets with us, Please enter valid ticket number\n", remainingTickets)
-				}
-
-			}
-		} else {
-			println("Thank you for showing interest")
-			break
+	println("Do you wantr to book a ticket?y/n")
+	var ch string
+	fmt.Scan(&ch)
+	if ch == "y" {
+		if remainingTickets == 0 {
+			fmt.Println("We are completely booked,Try next year")
+			//break
 		}
+		var firstName, lastName, email, userTickets = userInput()
+		// checking user validation
+		isValidName, isValidEmial, isValidTicketNumber := helper.Validation(firstName, lastName, email, userTickets, remainingTickets)
+
+		if isValidEmial && isValidName && isValidTicketNumber {
+
+			bookTicket(userTickets, firstName, lastName, email)
+
+			wg.Add(1)
+
+			go sendTicket(userTickets, firstName, lastName, email)
+
+			//concurrency in go
+
+			var k = firstnames()                                   // stroing the return value of function firstname into k
+			fmt.Printf("The first names of bookings are %v \n", k) //printing the return value of the function that is firstname
+
+			fmt.Printf("\n %v booked %v tickets \n", firstName, userTickets)
+			fmt.Println("	you will get a confirmation at this email address", email)
+
+			fmt.Printf("These are all your bookings %v\n", userTickets)
+
+			fmt.Println("Remaining tickets left	", remainingTickets)
+			println("Thank you")
+
+		} else {
+			if !isValidEmial {
+				fmt.Println("Please enter valid email")
+			}
+			if !isValidName {
+				fmt.Println("Enter valid Name")
+
+			}
+			if !isValidTicketNumber {
+				fmt.Printf("We only have %v tickets with us, Please enter valid ticket number\n", remainingTickets)
+			}
+
+		}
+	} else {
+		println("Thank you for showing interest")
+		//break
 	}
+	wg.Wait()
 }
+
+//}
 
 func greetUser() {
 	fmt.Printf("Welcome to %v booking application\n", conferenceName)
@@ -164,5 +172,6 @@ func sendTicket(userTickets uint, firstName string, lastName string, email strin
 	fmt.Println("#########")
 	fmt.Printf("Sending %v to email address %v \n", ticket, email)
 	fmt.Println("#########")
+	wg.Done()
 
 }
