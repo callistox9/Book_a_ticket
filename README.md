@@ -1,5 +1,2 @@
-# Book_a_ticket
-Just trying to learn Golang. 
-It's a basic ticket CLI booking application in which all basic functions are executed and understood
-The code contains a lot of comments for the reader to understand.
-
+<h1>Golang CLI based Ticketing System</h1>
+<p>This is a mini project in which you can book tickets from CLI connecting to database</p>
