@@ -8,57 +8,49 @@ import (
 )
 
 // package level variables
-// Slice -- syntax var bookings =[]string{}; or bookings:=[]string{}; //its a slice
+// Slice -- syntax var bookings :=[]string{}; or bookings:=[]string{};
 
 var conferenceName string = "Go Conference"
 
 const conferenceTickets int = 50
 
-// go through Data tyoes in go.<<-uint etc..-->>
+// unsigned integer, tickets can never be negative.
 var remainingTickets uint = 50
-var bookings = make([]UserData, 0) //empty list of user data struct
+var bookings = make([]UserData, 0)
 
-// var bookings = make([]map[string]string, 0) //creating empty list of maps
-// Learning about struct
-// type keyword creates a new type, with the neame you specify
 type UserData struct {
-	firstName string
-	lastName  string //mixed datatype >> defining a structure (which fields) of the User Type
-	//it iws somewhat like a light weight class, which e.g doesn't support inheritance
+	firstName       string
+	lastName        string
 	email           string
 	numberOfTickets uint
 }
 
-var wg = sync.WaitGroup{}
+var wg = sync.WaitGroup{} //wg will wait for all goRoutines to finidh
 
 func main() {
-
+	//Salutation before input is taken
 	greetUser()
 
-	// Infinite loop
-	//for {
-
-	println("Do you wantr to book a ticket?y/n")
+	println("Do you want to book a ticket? y/n")
 	var ch string
 	fmt.Scan(&ch)
 	if ch == "y" {
 		if remainingTickets == 0 {
 			fmt.Println("We are completely booked,Try next year")
-			//break
+
 		}
 		var firstName, lastName, email, userTickets = userInput()
-		// checking user validation
-		isValidName, isValidEmial, isValidTicketNumber := helper.Validation(firstName, lastName, email, userTickets, remainingTickets)
 
-		if isValidEmial && isValidName && isValidTicketNumber {
+		// checking user validation
+		isValidName, isValidEmail, isValidTicketNumber := helper.Validation(firstName, lastName, email, userTickets, remainingTickets)
+
+		if isValidEmail && isValidName && isValidTicketNumber {
 
 			bookTicket(userTickets, firstName, lastName, email)
 
 			wg.Add(1)
 
-			go sendTicket(userTickets, firstName, lastName, email)
-
-			//concurrency in go
+			go sendTicket(userTickets, firstName, lastName, email) // Goroutine, concurrently runs with main
 
 			var k = firstnames()                                   // stroing the return value of function firstname into k
 			fmt.Printf("The first names of bookings are %v \n", k) //printing the return value of the function that is firstname
@@ -72,7 +64,7 @@ func main() {
 			println("Thank you")
 
 		} else {
-			if !isValidEmial {
+			if !isValidEmail {
 				fmt.Println("Please enter valid email")
 			}
 			if !isValidName {
@@ -95,14 +87,12 @@ func main() {
 
 func greetUser() {
 	fmt.Printf("Welcome to %v booking application\n", conferenceName)
-	fmt.Printf("we have total of %v Tickets and %v Are still remaining\n", conferenceTickets, remainingTickets)
+	fmt.Printf("We have total of %v Tickets and %v are still remaining\n", conferenceTickets, remainingTickets)
 	fmt.Println("Get your tickets here to attend")
 }
 func firstnames() []string {
 	firstNames := []string{}
-	for _, booking := range bookings { //blank identifier '_'.To ignore variables you dont want to use
-		//var names = strings.Fields(booking) // names is an array which stores the split string after space
-		//var firstName = names[0];//the first index of the names which is first name is stored in it
+	for _, booking := range bookings {
 		firstNames = append(firstNames, booking.firstName)
 
 	}
@@ -113,10 +103,10 @@ func firstnames() []string {
 
 func userInput() (string, string, string, uint) {
 	var firstName string
-	var userTickets uint
 	var lastName string
 	var midName string
 	var email string
+	var userTickets uint
 
 	//ask user for their name
 	fmt.Println("Enter your first name")
@@ -167,7 +157,7 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 
 // GOroutines
 func sendTicket(userTickets uint, firstName string, lastName string, email string) {
-	time.Sleep(30 * time.Second) // the Sleep function stops or blocks the current "thread" (goRoutine) execution for the defined duration
+	time.Sleep(2 * time.Second) // the Sleep function stops or blocks the current "thread" (goRoutine) execution for the defined duration
 	var ticket = fmt.Sprintf("%v tickets for %v %v \n", userTickets, firstName, lastName)
 	fmt.Println("#########")
 	fmt.Printf("Sending %v to email address %v \n", ticket, email)
