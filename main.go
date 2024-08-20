@@ -6,6 +6,7 @@ import (
 	"strconv"
 )
 
+// package level functions
 // package level variables
 // Slice -- syntax var bookings =[]string{}; or bookings:=[]string{}; //its a slice
 
